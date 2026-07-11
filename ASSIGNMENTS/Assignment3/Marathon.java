@@ -44,7 +44,6 @@ public class Marathon {
 			}
 		}  // End of bubble sort algorithm (both arrays are sorted).
 		
-		
 		// From the sorted arrays, extract the best performance (and participant)
 		// and the second best performance (participant), positions 0 and 1. 
 		// Then print the results.
