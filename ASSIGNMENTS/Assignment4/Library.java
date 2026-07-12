@@ -7,7 +7,7 @@ package Chap4;
 
 public class Library {
 
-	// Add the missing implementation to this class
+	// Add the missing implementation to this class 
 	String libraryAddress;
 	String openingHours = "Undefined";
 	Book[] books;
@@ -17,18 +17,21 @@ public class Library {
 		this.libraryAddress = libraryAddress;
 	}
 
+	// Doubles the array size when nBooks = arraySize.
 	void changeBookArraySize(int newSize) {
 		if ((this.books == null)) {
 			this.books = new Book[newSize];
 		} else if (books.length < newSize) {
 			Book[] newBooks = new Book[newSize];
-			for (int i = 0; i < books.length; i++) {
+			for (int i = 0; i < this.nBooks; i++) {
 				newBooks[i] = this.books[i];
 			}
 			this.books = newBooks;
 		}
 	}
 
+	// Adds a book to the array. When the array is full, doubles the
+	// size of the array, then adds the new book.
 	void addBook(Book book) {
 		if (this.books == null) {
 			changeBookArraySize(1);
@@ -52,43 +55,58 @@ public class Library {
 	}
 
 	void borrowBook(String bookTitle) {
-		if (books == null) {
+		if (this.books == null) {
+			System.out.println("Sorry, the library located at <<" + this.libraryAddress
+					+ ">> is still empty. No book has been added.");
 			return;
 		}
-		for (int i = 0; i < books.length; i++) {
+		for (int i = 0; i < this.nBooks; i++) {
 			if (books[i].title == bookTitle) {
-				books[i].borrowed();
+				if (!books[i].isBorrowed()) {
+					books[i].borrowed();
+					System.out.println("The book <<" + books[i].title + 
+							">> is borrowed from the library located at <<" 
+							+ this.libraryAddress + ">>.");
+					break;
+				}
+				else {
+					System.out.println("Sorry, this copy of the book <<"
+							+ books[i].title + ">> has already been borrowed"
+									+ " from the library located at <<" + this.libraryAddress + ">>.");
+				}
 			}
 		}
 	}
 
+	// Prints only the list of available books (books
+	// that have not been borrowed). This function does
+	// not print the entire list of books in the library.
 	void printAvailableBooks() {
 		if (this.books == null) {
 			System.out.println("[]");
 			return;
 		}
-		System.out.print("[");
-		for (int i = 0; i < books.length; i++) {
-			if ((i != books.length - 1) && !(books[i].isBorrowed())) {
-				System.out.print(books[i].title + ", ");
+		String availableBooks = "[";
+		for (int i = 0; i < this.nBooks; i++) {
+			if (!books[i].isBorrowed()) {
+				availableBooks += books[i].title + ", ";
 			}
 		}
-		if (!books[books.length - 1].isBorrowed()) {
-			System.out.println(books[books.length - 1].title + "]\n");
-		}
-		else {
-			System.out.println("]\n");
-		}
+		availableBooks = availableBooks.substring(0, availableBooks.length() - 2);
+		availableBooks += "]";
+		System.out.println(availableBooks);
 	}
 
 	void returnBook(String bookTitle) {
-		for (int i = 0; i < books.length; i++) {
-			if (books[i].title == bookTitle) {
+		for (int i = 0; i < this.nBooks; i++) {
+			if ((books[i].title == bookTitle) && (books[i].isBorrowed())) {
 				this.books[i].returned();
+				break;
 			}
 		}
 	}
 
+	
 	public static void main(String[] args) {
 		// Create two libraries
 		Library firstLibrary = new Library("10 Main St.");
@@ -97,12 +115,13 @@ public class Library {
 		// Add four books to the first library
 		firstLibrary.addBook(new Book("The Da Vinci Code"));
 		firstLibrary.addBook(new Book("Le Petit Prince"));
+		firstLibrary.addBook(new Book("The Lord of the Rings"));
 		firstLibrary.addBook(new Book("A Tale of Two Cities"));
 		firstLibrary.addBook(new Book("The Lord of the Rings"));
 
 		// Set the opening hours.
 		String firstLibOpen = "Mon - Fri (08:00AM - 05:00PM PDT).";
-		String secondLibOpen = "Mon - Fri (08:00AM - 05:00PM PDT), Sat (09:00 AM - 01:00PM).";
+		String secondLibOpen = "Mon - Fri (09:00AM - 04:30PM PDT), Sat (09:00 AM - 01:00PM).";
 
 		firstLibrary.setOpeningHours(firstLibOpen);
 		secondLibrary.setOpeningHours(secondLibOpen);
@@ -122,6 +141,7 @@ public class Library {
 		System.out.println("Borrowing The Lord of the Rings:");
 		firstLibrary.borrowBook("The Lord of the Rings");
 		firstLibrary.borrowBook("The Lord of the Rings");
+		firstLibrary.borrowBook("The Lord of the Rings");
 		secondLibrary.borrowBook("The Lord of the Rings");
 		System.out.println();
 
@@ -139,6 +159,14 @@ public class Library {
 		System.out.println();
 
 		// Print the titles of available from the first library
+		System.out.println("Books available in the first library:");
+		firstLibrary.printAvailableBooks();
+		
+		// Return the second copy of the book the "The Lords of the Rings".
+		// Then print the list of books.
+		System.out.println("Returning The Lord of the Rings:");
+		firstLibrary.returnBook("The Lord of the Rings");
+		System.out.println();
 		System.out.println("Books available in the first library:");
 		firstLibrary.printAvailableBooks();
 	}

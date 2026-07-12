@@ -36,12 +36,13 @@ public class Book {
     	return this.borrowed;
     }
    
-    // Returns the title of the book
+    // Returns the title of the book 
     public String getTitle() {
         // Implement this method
     	return this.title;
     }
 
+    
     public static void main(String[] arguments) {
         // Small test of the Book class
         Book example = new Book("The Da Vinci Code");
@@ -51,9 +52,6 @@ public class Book {
         System.out.println("Borrowed? (should be true): " + example.isBorrowed());
         example.returned();
         System.out.println("Borrowed? (should be false): " + example.isBorrowed());
-        
-        int[] val = new int[5];
-        System.out.println(val.length);
     }
-
+    
 }
